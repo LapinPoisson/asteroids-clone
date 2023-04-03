@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>More drawing to canvas</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="drawing.js"></script>
+    </head>
+    <body>
+        <h1>More drawing to canvas</h1>
+        <canvas id="asteroids" width="400" height="400"></canvas>
+        <script>
+            var canvas = document.getElementById("asteroids");
+            var ctx = canvas.getContext("2d");
+            // grid drawing goes here
+            // drawGrid(ctx, 15, 25, 'red', 'yellow');
+            drawGrid(ctx, 5, 30, 'white', 'red')
+            ctx.beginPath();
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.fillStyle = "#00FF00";
+            ctx.lineWidth = 2;
+            ctx.moveTo(50, 50);
+            ctx.lineTo(150, 250);
+            ctx.lineTo(250, 170);
+            ctx.lineTo(320, 280);
+            ctx.closePath(); // instead of ctx.fill();
+            ctx.stroke();
+            ctx.fillText("(50, 50)", 30, 40);
+            ctx.fillText("(150, 250)", 130, 260);
+            ctx.fillText("(250, 170)", 255, 175);
+            
+            ctx.beginPath();
+            ctx.moveTo(50, 250);
+            ctx.lineTo(50, 350);
+            ctx.lineTo(150, 350);
+            ctx.closePath();
+            
+            // ctx.fill();
+            
+        </script>
+    </body>
+</html>

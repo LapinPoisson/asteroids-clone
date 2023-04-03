@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Drawing a spaceship</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="drawing.js"></script>
+    </head>
+    <body>
+        <h1>Drawing a spaceship</h1>
+        <canvas id="asteroids" width="400" height="400"></canvas>
+        <script>
+            var ctx = document.getElementById("asteroids").getContext("2d");
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = "white";
+            let x = ctx.canvas.width * 0.9;
+            let y = 0;
+            let radius = ctx.canvas.width * 0.1;
+            drawGrid(ctx);
+
+            let t = ctx.canvas.width / 20;
+            let r = Math.PI / 500;
+            ctx.translate(0, t);
+            for(let i = 0; i <= 50; i ++) {
+                ctx.rotate(i * r);
+                drawShip(ctx, t, {guide: true, lineWidth: 1});
+                ctx.translate(t, 0);
+            }
+            // drawShip(ctx, x, y, radius, {guide: true});
+        </script>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <title>This is an html canvas page</title>
+        <style media="screen">
+            body {
+                text-align: center;
+                font-family: sans-serif;
+            }
+            canvas {
+                background-color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>This is an HTML canvas</h1>
+        <canvas id="asteroids" width="400" height="400"></canvas>
+        <script>
+            var canvas = document.getElementById("asteroids");
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = 'dimgrey';
+            ctx.strokeStyle = 'lightgrey';
+            ctx.lineWidth = 5;
+            ctx.rect(75, 50, canvas.width - 150, canvas.height - 100);
+            ctx.stroke();
+            ctx.fill();
+            ctx.font = "34px Arial";
+            ctx.strokeStyle = '#FF2222';
+            ctx.fillStyle = '#FFAAAA';
+            ctx.textAlign = 'center'
+            ctx.lineWidth = 0.75;
+            let msg = "2D Drawing";
+            ctx.fillText(msg, canvas.width/2, 100);
+            ctx.strokeText(msg, canvas.width/2,100);
+            let msg2 = "it's quite easy";
+            ctx.font = "24px Arial";
+            ctx.fillText(msg2, canvas.width / 2 , 330);
+            ctx.strokeText(msg2, canvas.width / 2, 330);
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); // begins path or resets current path
+            ctx.arc(200, 140, 20, 0, Math.PI *2); // first 2 params are (x, y) of circle, radius, fourth and fifth args are starting and ending angle of the arc in radians
+            ctx.moveTo(200,160); // moves the 'pen' to this point
+            ctx.lineTo(200, 220); // draws a line from ctx to (x, y)
+            ctx.moveTo(180, 300);
+            ctx.lineTo(185, 260);
+            ctx.lineTo(200, 220);
+            ctx.lineTo(215, 260);
+            ctx.lineTo(220, 300);
+            ctx.moveTo(240, 130);
+            ctx.lineTo(225, 170);
+            ctx.lineTo(200, 170);
+            ctx.lineTo(175, 180);
+            ctx.lineTo(170, 220);
+            ctx.stroke();
+        </script>
+    </body>
+</html>

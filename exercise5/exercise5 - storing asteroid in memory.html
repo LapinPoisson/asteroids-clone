@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Drawing an asteroid</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="drawing.js"></script>
+    </head>
+    <body>
+        <h1>Drawing an asteroid</h1>
+        <canvas id="asteroids" width="400" height="400"></canvas>
+        <script>
+            var ctx = document.getElementById("asteroids").getContext("2d");
+            drawGrid(ctx);
+            var segments = 15, noise = 0;
+            var shape = [];
+            for (var i = 0; i < segments; i++) {
+                shape.push(2 * (Math.random() - 0.5));
+            }
+            for (let x=0.1; x < 1; x += 0.2) {
+                for (let y = 0.1; y < 1; y += 0.2) {
+                    ctx.save();
+                    ctx.translate(ctx.canvas.width * x, ctx.canvas.height * y);
+                    drawAsteroid(ctx, ctx.canvas.width / 16, shape, {noise: noise, guide: true});
+                    ctx.restore();
+                    noise += 0.025;
+                }
+            }
+        </script>
+    </body>
+</html>

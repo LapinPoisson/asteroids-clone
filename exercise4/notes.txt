@@ -1,0 +1,5 @@
+sine and cosine
+
+these functions allow the x,y coordinates to be calculated from a distance (radius) and an angle - triangulation
+
+to convert an angle and a distance to x and y coordinates, simply multiply Math
