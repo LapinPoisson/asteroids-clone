@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Floating Asteroids</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="drawing.js"></script>
+        <script src="objects.js"></script>
+    </head>
+    <body>
+        <h1>Floating Asteroids</h1>
+        <canvas id="asteroids" width="300" height="300"></canvas>
+        <script>
+            let ctx = document.getElementById("asteroids").getContext("2d");
+            var asteroid = new Asteroid(24, 50, 0.2)
+            var asteroids = [
+              new Asteroid(24, 50, 0.2),
+              new Asteroid(24, 50, 0.5),
+              new Asteroid(5, 50,0.2)
+            ]
+
+            function draw(ctx, guide) {
+              if (guide) {
+                drawGrid(ctx);
+              }
+              asteroids.forEach((asteroid) => {
+                asteroid.draw(ctx, guide);
+              })
+            }
+
+            function update(elapsed) {
+              asteroids.forEach((asteroid) => {
+                asteroid.update(elapsed);
+              })
+            }
+
+            var previous, elapsed;
+            function frame(timestamp) {
+              ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+              if (!previous) previous = timestamp;
+              elapsed = timestamp - previous;
+              update(elapsed / 1000);
+              draw(ctx, true);
+              previous = timestamp;
+              window.requestAnimationFrame(frame);
+            }
+            window.requestAnimationFrame(frame);
+        </script>
+    </body>
+</html>
