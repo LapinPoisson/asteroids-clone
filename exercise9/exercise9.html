@@ -13,7 +13,6 @@
             'use strict';
             var ctx = document.getElementById("asteroids").getContext("2d");
             var ship = new Ship(ctx.canvas.width / 2, ctx.canvas.height / 2)
-            console.log(ship.x, ship.y)
 
             var asteroidCount = 5;
             var asteroids = []
@@ -32,7 +31,7 @@
             // var mass = new Mass(ctx.canvas.width/2, ctx.canvas.height/2, 10, 20);
             function draw(ctx) {
                 drawGrid(ctx);
-                drawShip(ctx, ship.radius)
+                ship.draw(ctx, ship.radius);
                 for (const asteroid of asteroids) {
                     asteroid.draw(ctx);
                 }

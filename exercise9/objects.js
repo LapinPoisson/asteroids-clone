@@ -38,15 +38,16 @@ function Ship(x, y) {
 
 extend(Ship, Mass);
 
-Ship.prototype.draw = function(c, guide) {
-    c.save();
-    c.translate(this.x, this.y);
-    c.rotate(this.angle);
-    c.strokeStyle = "white";
-    c.lineWidth = 2;
-    c.fillStyle = "black";
-    drawShip(c, this.radius, {guide: guide});
-    c.restore();
+Ship.prototype.draw = function(ctx, guide) {
+    ctx.save();
+    console.log(this.x, this.y)
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.fillStyle = "black";
+    drawCurvyShip(ctx, this.radius, {guide: guide});
+    ctx.restore();
 }
 
 Asteroid.prototype.draw = function(ctx, guide) {
