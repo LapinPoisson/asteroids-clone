@@ -12,14 +12,37 @@
         <script>
             'use strict';
             var ctx = document.getElementById("asteroids").getContext("2d");
-            var mass = new Mass(ctx.canvas.width/2, ctx.canvas.height/2, 10, 20);
+            var ship = new Ship(ctx.canvas.width / 2, ctx.canvas.height / 2)
+            console.log(ship.x, ship.y)
+
+            var asteroidCount = 5;
+            var asteroids = []
+            for (var i = 0; i < asteroidCount; i++) {
+                var asteroid = new Asteroid(
+                    10000,
+                    Math.random() * ctx.canvas.width,
+                    Math.random() * ctx.canvas.height
+                )
+                var pushAngle = Math.random() * 2 * Math.PI
+                asteroid.push(Math.random() * 2 * Math.PI, 2000, 60);
+                asteroid.twist((Math.random()-0.5) * 500, 60);
+                asteroids.push(asteroid);
+            }
+
+            // var mass = new Mass(ctx.canvas.width/2, ctx.canvas.height/2, 10, 20);
             function draw(ctx) {
                 drawGrid(ctx);
-                mass.draw(ctx)
+                drawShip(ctx, ship.radius)
+                for (const asteroid of asteroids) {
+                    asteroid.draw(ctx);
+                }
             }
 
             function update(elapsed) {
-                mass.update(elapsed, ctx)
+                ship.update(elapsed, ctx);
+                for (const asteroid of asteroids) {
+                    asteroid.update(elapsed, ctx)
+                }
             }
 
             var previous;

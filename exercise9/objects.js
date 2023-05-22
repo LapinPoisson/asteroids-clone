@@ -1,4 +1,11 @@
-function Mass(x, y, mass, radius, angle, x_speed, y_speed, rotation_speed) {
+function extend(ChildClass, ParentClass) {
+    var parent = new ParentClass();
+    ChildClass.prototype = parent;
+    ChildClass.prototype.super = parent.constructor;
+    ChildClass.prototype.constructor = ChildClass;
+}
+
+function Mass(mass, radius, x, y, angle, x_speed, y_speed, rotation_speed) {
     this.x = x;
     this.y = y;
     this.mass = mass || 1;
@@ -9,20 +16,45 @@ function Mass(x, y, mass, radius, angle, x_speed, y_speed, rotation_speed) {
     this.rotation_speed = rotation_speed || 0;
 }
 
-function Asteroid(segments, radius, noise) {
-    this.x = ctx.canvas.width * Math.random();
-    this.y = ctx.canvas.height * Math.random();
-    this.angle = 0;
-    this.x_speed = ctx.canvas.width * (Math.random() - 0.5);
-    this.y_speed = ctx.canvas.height * (Math.random() - 0.5);
-    this.rotation_speed = 2 * Math.PI * (Math.random() - 0.5);
-    this.segments = segments;
-    this.radius = radius;
-    this.noise = noise;
+function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {
+    var density = 1; // kg per square pixel
+    var radius = Math.sqrt((mass / density) / Math.PI);
+    this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
+    this.circumference = 2 * Math.PI * this.radius;
+    this.segments = Math.ceil(this.circumference / 15);
+    this.segments = Math.min(25, Math.max(5, this.segments));
+    this.noise = 0.2;
     this.shape = [];
-    for (let i = 0; i < segments; i++) {
-        this.shape.push(Math.random() - 0.5);
+    for (var i = 0; i < this.segments; i++) {
+        this.shape.push(2 * (Math.random() - 0.5));
     }
+}
+
+extend(Asteroid, Mass);
+
+function Ship(x, y) {
+    this.super(10, 20, x, y, 1.5 * Math.PI);
+}
+
+extend(Ship, Mass);
+
+Ship.prototype.draw = function(c, guide) {
+    c.save();
+    c.translate(this.x, this.y);
+    c.rotate(this.angle);
+    c.strokeStyle = "white";
+    c.lineWidth = 2;
+    c.fillStyle = "black";
+    drawShip(c, this.radius, {guide: guide});
+    c.restore();
+}
+
+Asteroid.prototype.draw = function(ctx, guide) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    drawAsteroid(ctx, this.radius, this.shape, {noise: this.noise, guide: guide});
+    ctx.restore(); 
 }
 
 Mass.prototype.update = function(elapsed, ctx) {
