@@ -11,6 +11,7 @@
         <canvas id="asteroids" width="600" height="600" tabindex="166"></canvas>
         <script>
             'use strict';
+            var guide = true;
             var ctx = document.getElementById("asteroids").getContext("2d");
             var asteroidCount = 4;
             var asteroids = []
@@ -26,30 +27,35 @@
                 asteroids.push(asteroid);
             }
             var ship = new Ship(ctx.canvas.width / 2, ctx.canvas.height / 2, 1000)
-            
+            var projectiles = [];
+
             function draw(ctx) {
-                drawGrid(ctx);
-                ship.draw(ctx, ship.radius);
+                if (guide) {
+                    drawGrid(ctx);
+                }
+                ship.draw(ctx, true);
                 for (const asteroid of asteroids) {
                     asteroid.draw(ctx);
                 }
+                projectiles.forEach(function(p) {
+                    p.draw(ctx);
+                })
             }
 
             function update(elapsed) {
-                // // if its nearly stopped, turn
-                // if (Math.abs(ship.speed()) < 15) {
-                //     ship.angle += Math.PI * 2 * 0.01;
-                // }
-                // // if its going fast, turn around to slow down
-                // if (Math.abs(ship.speed()) > 100) {
-                //     ship.angle = ship.movement_angle() + Math.PI;
-                // }
-                // // push in the direction it's pointing (thrusters)
-                // ship.push(ship.angle, 1000, elapsed)
                 asteroids.forEach(function(asteroid) {
                     asteroid.update(elapsed, ctx)
                 })
                 ship.update(elapsed, ctx)
+                projectiles.forEach(function(projectile, i, projectiles) {
+                    projectile.update(elapsed, ctx);
+                    if (projectile.life <= 0) {
+                        projectiles.splice(i, 1);
+                    }
+                });
+                if (ship.trigger && ship.loaded) {
+                    projectiles.push(ship.projectile(elapsed))
+                }
             }
 
             var previous;
@@ -65,12 +71,27 @@
             window.requestAnimationFrame(frame);
 
             function key_handler(e, value) {
-                console.log(e)
                 var nothing_handled = false;
                 switch(e.key || e.keyCode) {
                     case "ArrowUp":
                     case 38:
                         ship.thrusterOn = value;
+                        break;
+                    case "ArrowLeft":
+                    case 37:
+                        ship.leftThruster = value;
+                        break;
+                    case "ArrowRight":
+                    case 39:
+                        ship.rightThruster = value;
+                        break;
+                    case " ":
+                    case  32: // spacebar
+                        ship.trigger = value;
+                        break;
+                    case "g":
+                    case 71:
+                        if (value) guide = !guide;
                         break;
                     default:
                         nothing_handled = true;

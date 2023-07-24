@@ -71,7 +71,15 @@ Mass.prototype.draw = function(c) {
 function Ship(x, y, power) {
     this.super(10, 20, x, y, 1.5 * Math.PI);
     this.thrusterPower = power;
+    this.steeringPower = power / 20;
+    this.rightThruster = false;
+    this.leftThruster = false;
     this.thrusterOn = false;
+    this.trigger = false;
+    this.loaded = false;
+    this.weapon_reload_time = 0.25;
+    this.time_until_reloaded = this.weapon_reload_time;
+    this.weapon_power = this.weapon_power || 200;
 }
 
 extend(Ship, Mass);
@@ -84,7 +92,7 @@ Ship.prototype.draw = function(ctx, guide) {
     // ctx.lineWidth = 2;
     // ctx.fillStyle = "black";
     drawShip(ctx, this.radius, {
-        // guide: guide,
+        guide: guide,
         thruster: this.thrusterOn
     });
     ctx.restore();
@@ -92,7 +100,51 @@ Ship.prototype.draw = function(ctx, guide) {
 
 Ship.prototype.update = function(elapsed) {
     this.push(this.angle, this.thrusterOn * this.thrusterPower, elapsed);
+    this.twist((this.rightThruster - this.leftThruster) * this.steeringPower, elapsed);
+    this.loaded = this.time_until_reloaded === 0;
+    if(!this.loaded) {
+        this.time_until_reloaded -= Math.min(elapsed, this.time_until_reloaded);
+    }
     Mass.prototype.update.apply(this, arguments);
+}
+
+Ship.prototype.projectile = function(elapsed) {
+    var p = new Projectile(
+        0.025, 
+        1, 
+        this.x + Math.cos(this.angle) * this.radius, 
+        this.y + Math.sin(this.angle) * this.radius,
+        this.x_speed,
+        this.y_speed,
+        this.rotation_speed
+    );
+    p.push(this.angle, this.weapon_power, elapsed);
+    this.push(this.angle + Math.PI, this.weapon_power, elapsed);
+    this.time_until_reloaded = this.weapon_reload_time;
+    return p;
+}
+
+function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
+    var density = 0.001; // low density means we can see very light projectiles
+    var radius = Math.sqrt((mass / density) / Math.PI);
+    this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
+    this.lifetime = lifetime;
+    this.life = 1.0;
+}
+
+extend(Projectile, Mass);
+
+Projectile.prototype.update = function(elapsed, ctx) {
+    this.life -= (elapsed / this.lifetime);
+    Mass.prototype.update.apply(this, arguments);
+}
+
+Projectile.prototype.draw = function(ctx, guide) {
+    ctx.save();
+    ctx.translate(this.x, this.y)
+    ctx.rotate(this.angle);
+    drawProjectile(ctx, this.radius, this.life, guide);
+    ctx.restore();
 }
 
 function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {

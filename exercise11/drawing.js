@@ -77,7 +77,6 @@ function drawShip(ctx, radius, options) {
     ctx.save();
     // optionally draw the collision barrier
     if (options.guide) {
-        
         ctx.strokeStyle = "white";
         ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
         ctx.lineWidth = 0.5;
@@ -127,5 +126,16 @@ function drawShip(ctx, radius, options) {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
+}
+
+function drawProjectile(ctx, radius, lifetime) {
+    ctx.save();
+    ctx.fillStyle = "rgb(100%, 100%, " + (100 * lifetime) + "%)";
+    ctx.moveTo(radius, 0);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, tau);
+    ctx.fill();
     ctx.restore();
 }
